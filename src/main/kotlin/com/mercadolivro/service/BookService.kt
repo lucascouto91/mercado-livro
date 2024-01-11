@@ -28,8 +28,13 @@ class BookService(
     fun delete(id: Int) {
         val book = findById(id)
         book.status = BooksStatus.CANCELADO
-        bookRepository.save(book)
 
+        update(book)
+
+    }
+
+    fun update(book: BookModel) {
+        bookRepository.save(book)
     }
 
 }
