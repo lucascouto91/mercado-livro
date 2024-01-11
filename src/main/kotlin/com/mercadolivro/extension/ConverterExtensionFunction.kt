@@ -19,7 +19,7 @@ fun PostBookRequest.toBookModel(customer: CustomerModel): BookModel {
     return BookModel(
         name = this.name,
         price = this.price,
-        status = BooksStatus.ATVIO,
+        status = BooksStatus.ATIVO,
         customer = customer
     )
 }
