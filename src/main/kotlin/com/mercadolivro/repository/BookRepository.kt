@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository
 
 interface BookRepository : CrudRepository<BookModel, Int> {
     fun findByStatus(status: BooksStatus): List<BookModel>
+    fun findByCustomer(customer: CustomerModel): List<BookModel>
 
 
 }
