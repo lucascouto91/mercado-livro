@@ -25,12 +25,30 @@ data class BookModel(
     @Column
     var price: BigDecimal,
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    var status: BooksStatus? = null,
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     var customer: CustomerModel? = null
 
-)
+) {
+    @Column
+    @Enumerated(EnumType.STRING)
+    var status: BooksStatus? = null
+        set(value) {
+            if (field == BooksStatus.CANCELADO || field == BooksStatus.DELETADO)
+                throw Exception("N~ao 'e possivel alterar um livro com status ${field}")
+
+            field = value
+        }
+
+    constructor(
+        id: Int? = null,
+        name: String,
+        price: BigDecimal,
+        customer: CustomerModel? = null,
+        status: BooksStatus?
+    ) : this(id, name, price, customer) {
+        this.status = status
+    }
+
+}
