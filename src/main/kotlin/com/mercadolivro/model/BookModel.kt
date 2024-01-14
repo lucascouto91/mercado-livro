@@ -36,7 +36,7 @@ data class BookModel(
     var status: BooksStatus? = null
         set(value) {
             if (field == BooksStatus.CANCELADO || field == BooksStatus.DELETADO)
-                throw Exception("N~ao 'e possivel alterar um livro com status ${field}")
+                throw Exception("Não é possivel alterar um livro com status ${field}")
 
             field = value
         }
