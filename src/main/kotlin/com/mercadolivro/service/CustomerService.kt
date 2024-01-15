@@ -1,43 +1,46 @@
 package com.mercadolivro.service
 
+import com.mercadolivro.enums.CustomerStatus
 import com.mercadolivro.model.CustomerModel
+import com.mercadolivro.repository.CustomerRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerService {
+class CustomerService(
+    val customerRepository: CustomerRepository,
+    val bookService: BookService
+) {
 
-    val customers = mutableListOf<CustomerModel>()
-
-    fun getAll(name: String?): List<CustomerModel> {
+    fun getAll(name: String?, pageable: Pageable): Page<CustomerModel> {
         name?.let {
-            return customers.filter { it.name.contains(name, true) }
+            return customerRepository.findByNameContaining(name, pageable)
         }
-        return customers
+        return customerRepository.findAll(pageable)
     }
 
     fun create(customer: CustomerModel) {
-        val id = if (customers.isEmpty()) {
-            1
-        } else {
-            customers.last().id!!.toInt() + 1
-        }.toString()
-        customer.id = id
-        customers.add(customer)
+        customerRepository.save(customer)
     }
 
-    fun getCustomer(id: String): CustomerModel {
-        return customers.filter { it.id == id }.first()
+    fun findById(id: Int): CustomerModel {
+        return customerRepository.findById(id).orElseThrow()
     }
 
     fun update(customer: CustomerModel) {
-        customers.filter { it.id == customer.id }.first().let {
-            it.name = customer.name
-            it.email = customer.email
+        if (!customerRepository.existsById(customer.id!!)){
+            throw Exception()
         }
+        customerRepository.save(customer)
     }
 
-    fun delete(id: String) {
-        customers.removeIf { it.id == id }
+    fun delete(id: Int) {
+        val customer = findById(id)
+        bookService.deleteByCustomer(customer)
+
+        customer.status = CustomerStatus.INATIVO
+        customerRepository.save(customer)
     }
 
 
