@@ -30,6 +30,8 @@ dependencies {
 
 	//implementation ("org.flywaydb:flyway-core:10.4.1")
 	implementation ("org.flywaydb:flyway-mysql")
+
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
 tasks.withType<KotlinCompile> {
