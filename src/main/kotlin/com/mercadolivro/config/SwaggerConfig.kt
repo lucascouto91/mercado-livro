@@ -11,7 +11,7 @@ class SwaggerConfig {
     fun api(): GroupedOpenApi? {
         return GroupedOpenApi.builder()
             .group("mercado-livro")
-            .pathsToMatch("api/customer/**", "/api/book/**")
+            .pathsToMatch("/customer/**", "/book/**")
             .build()
     }
 
