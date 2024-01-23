@@ -9,6 +9,13 @@ spring:
     #driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     default-property-inclusion: non_null
+  resources:
+    #add-mappings: true
+
+springfox:
+  documentation:
+    swagger-ui:
+      enable: true
 
 
 
