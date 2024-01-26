@@ -5,16 +5,20 @@ import com.mercadolivro.model.PurchaseModel
 import com.mercadolivro.repository.PurchaseRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PurchaseService(
     private val purchaseRepository: PurchaseRepository,
     private val applicationEventPublisher: ApplicationEventPublisher
 ) {
+    @Transactional
     fun create(purchaseModel: PurchaseModel) {
         purchaseRepository.save(purchaseModel)
 
+        println("Disparando evento de compra")
         applicationEventPublisher.publishEvent(PurchaseEvent(this, purchaseModel))
+        println("Finalizanção do processamento!")
     }
 
     fun update(purchaseModel: PurchaseModel) {
