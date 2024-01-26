@@ -28,10 +28,18 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("com.mysql:mysql-connector-j")
 
-	//implementation ("org.flywaydb:flyway-core:10.4.1")
+//	implementation ("org.flywaydb:flyway-core:10.4.1") //problem
 	implementation ("org.flywaydb:flyway-mysql")
 
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+//	implementation("io.springfox:springfox-swagger2:3.0.0")
+//	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+//	implementation("io.springfox:springfox-boot-starter:3.0.0")
+//	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
+
 }
 
 tasks.withType<KotlinCompile> {
