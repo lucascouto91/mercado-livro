@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.mercadolivro.controller.request.LoginRequest
 import com.mercadolivro.exception.AuthenticationException
 import com.mercadolivro.repository.CustomerRepository
+import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.AuthenticationManager
@@ -25,7 +26,20 @@ class AuthenticationFilter(
             val authToken = UsernamePasswordAuthenticationToken(id, loginRequest.password)
             return authenticationManager.authenticate(authToken)
         } catch (ex: Exception) {
-            throw AuthenticationException("Invalid credentials", "999")
+            throw AuthenticationException("Falha ao autenticas", "999")
         }
     }
+
+    override fun successfulAuthentication(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
+        authResult: Authentication
+    ) {
+        val id = (authResult.principal as UserCustomDetails).id
+
+        response.addHeader("Authorization", "123456")
+
+    }
+
 }
