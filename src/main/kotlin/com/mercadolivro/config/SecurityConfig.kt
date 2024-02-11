@@ -2,6 +2,7 @@ package com.mercadolivro.config
 
 import com.mercadolivro.repository.CustomerRepository
 import com.mercadolivro.security.AuthenticationFilter
+import com.mercadolivro.security.AuthorizationFilter
 import com.mercadolivro.security.JwtUtil
 import com.mercadolivro.service.UserDetailsCustomService
 import org.springframework.context.annotation.Bean
@@ -42,7 +43,9 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
                     .anyRequest().authenticated()
-            }.build()
+            }
+            .addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
+            .build()
     }
     @Bean
     fun authenticationManager(): AuthenticationManager {
@@ -53,4 +56,7 @@ class SecurityConfig(
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
+
+
+
 }
