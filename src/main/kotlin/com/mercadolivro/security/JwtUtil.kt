@@ -36,8 +36,13 @@ class JwtUtil {
     }
 
     private fun getClaims(token: String): Claims {
+        val key = Keys.hmacShaKeyFor(secret!!.toByteArray())
         try {
-            return Jwts.parser().setSigningKey(getKey()).build().parseClaimsJwt(token).body
+            return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .payload
         } catch (ex: Exception) {
             throw AuthenticationException("Token Inválido", "999")
         }

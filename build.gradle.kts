@@ -42,7 +42,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
 // 	https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
-	implementation("io.jsonwebtoken:jjwt:0.12.4")
+	implementation("io.jsonwebtoken:jjwt:0.12.5")
 
 }
 
