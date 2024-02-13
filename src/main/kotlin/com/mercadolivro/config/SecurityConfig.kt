@@ -1,5 +1,6 @@
 package com.mercadolivro.config
 
+import com.mercadolivro.enums.Roles
 import com.mercadolivro.repository.CustomerRepository
 import com.mercadolivro.security.AuthenticationFilter
 import com.mercadolivro.security.AuthorizationFilter
@@ -28,10 +29,13 @@ class SecurityConfig(
 
     private val publicPostMatchers = arrayOf("/customer")
 
+    private val adminMatchers = arrayOf(
+        "/admin/**"
+    )
+
     fun configure(auth: AuthenticationManagerBuilder){
         auth.userDetailsService(userDetails).passwordEncoder(bCryptPasswordEncoder())
     }
-
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -41,6 +45,7 @@ class SecurityConfig(
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
             .authorizeHttpRequests { auth ->
+                auth.requestMatchers(*adminMatchers).hasAuthority(Roles.ADMIN.description)
                 auth.requestMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
                     .anyRequest().authenticated()
             }
