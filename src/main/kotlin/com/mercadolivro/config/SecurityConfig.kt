@@ -18,6 +18,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +38,20 @@ class SecurityConfig(
         "/admin/**"
     )
 
-    fun configure(auth: AuthenticationManagerBuilder){
+    private val swaggerMatchers = arrayOf(
+        "/v2/api-docs/**",
+        "/v3/api-docs/**",
+        "/configuration/ui",
+        "/swagger-resources/**",
+        "/configuration/security",
+        "/swagger-ui/**",
+        "/swagger-ui/index.html",
+        "/swagger-ui.html",
+        "/webjars/**",
+        "/csrf/**"
+    )
+
+    fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetails).passwordEncoder(bCryptPasswordEncoder())
     }
 
@@ -46,14 +62,29 @@ class SecurityConfig(
             .csrf { it.disable() }
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .addFilter(AuthenticationFilter(authenticationManager(), customerRepository, jwtUtil))
-            .authorizeHttpRequests { auth ->
-                auth.requestMatchers(*adminMatchers).hasAuthority(Roles.ADMIN.description)
-                auth.requestMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers(*adminMatchers).hasAuthority(Roles.ADMIN.description)
+                    .requestMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
+                    .requestMatchers(*swaggerMatchers).permitAll()
                     .anyRequest().authenticated()
             }
             .addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
             .build()
     }
+
+    @Bean
+    fun corsConfig(): CorsFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+        config.allowCredentials = true
+        config.addAllowedOriginPattern("*")
+        config.addAllowedHeader("*")
+        config.addAllowedMethod("*")
+        source.registerCorsConfiguration("/**", config)
+        return CorsFilter(source)
+    }
+
     @Bean
     fun authenticationManager(): AuthenticationManager {
         return authenticationConfiguration.authenticationManager
@@ -63,7 +94,6 @@ class SecurityConfig(
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
-
 
 
 }
