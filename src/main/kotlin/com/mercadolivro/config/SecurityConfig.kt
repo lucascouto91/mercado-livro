@@ -4,6 +4,7 @@ import com.mercadolivro.enums.Roles
 import com.mercadolivro.repository.CustomerRepository
 import com.mercadolivro.security.AuthenticationFilter
 import com.mercadolivro.security.AuthorizationFilter
+import com.mercadolivro.security.CustomAuthenticationEntryPoint
 import com.mercadolivro.security.JwtUtil
 import com.mercadolivro.service.UserDetailsCustomService
 import org.springframework.context.annotation.Bean
@@ -29,7 +30,8 @@ class SecurityConfig(
     private val customerRepository: CustomerRepository,
     private val authenticationConfiguration: AuthenticationConfiguration,
     private val userDetails: UserDetailsCustomService,
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val customEntryPoint: CustomAuthenticationEntryPoint
 ) {
 
     private val publicPostMatchers = arrayOf("/customer")
@@ -70,6 +72,7 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             .addFilter(AuthorizationFilter(authenticationManager(), userDetails, jwtUtil))
+            .exceptionHandling { it.authenticationEntryPoint(customEntryPoint)}
             .build()
     }
 
