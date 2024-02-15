@@ -17,6 +17,10 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+jwt:
+  secret: Sa30TS3f83wqmzilHICTyzU2ZcM_7OXooKgROqo-6iuPiwn06N0ejWqajE3fRh0MPE4ZbUF48o5ObIBftxmUqQ
+  expiration: 999999
+
 
 
 #spring.jpa.hibernate.ddl-auto=update
