@@ -34,7 +34,11 @@ class SecurityConfig(
     private val customEntryPoint: CustomAuthenticationEntryPoint
 ) {
 
-    private val publicPostMatchers = arrayOf("/customer")
+    private val publicPostMatchers = arrayOf("/customers")
+
+    private val publicGetMatchers = arrayOf(
+        "/books"
+    )
 
     private val adminMatchers = arrayOf(
         "/admin/**"
@@ -68,6 +72,7 @@ class SecurityConfig(
                 it
                     .requestMatchers(*adminMatchers).hasAuthority(Roles.ADMIN.description)
                     .requestMatchers(HttpMethod.POST, *publicPostMatchers).permitAll()
+                    .requestMatchers(HttpMethod.GET, *publicGetMatchers).permitAll()
                     .requestMatchers(*swaggerMatchers).permitAll()
                     .anyRequest().authenticated()
             }
@@ -81,7 +86,7 @@ class SecurityConfig(
         val source = UrlBasedCorsConfigurationSource()
         val config = CorsConfiguration()
         config.allowCredentials = true
-        config.addAllowedOriginPattern("*")
+        config.addAllowedOrigin("*")
         config.addAllowedHeader("*")
         config.addAllowedMethod("*")
         source.registerCorsConfiguration("/**", config)
