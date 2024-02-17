@@ -8,7 +8,9 @@ import io.swagger.v3.oas.models.info.License
 import org.springdoc.core.models.GroupedOpenApi
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
+@Profile("!prod")
 @Configuration
 class SwaggerConfig {
 
@@ -16,7 +18,7 @@ class SwaggerConfig {
     fun api(): GroupedOpenApi? {
         return GroupedOpenApi.builder()
             .group("mercado-livro")
-            .pathsToMatch("/customer/**", "/book/**")
+            .pathsToMatch("/customers/**", "/books/**")
             .build()
     }
 

@@ -2,20 +2,14 @@ server:
   port: 8080
 
 spring:
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
-  datasource:
-    url: jdbc:mysql://localhost:3306/mercadolivro?createDatabaseIfNotExist=true
-    username: root
-    password: cursosql
-    #driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     default-property-inclusion: non_null
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
 
 jwt:
   secret: Sa30TS3f83wqmzilHICTyzU2ZcM_7OXooKgROqo-6iuPiwn06N0ejWqajE3fRh0MPE4ZbUF48o5ObIBftxmUqQ
